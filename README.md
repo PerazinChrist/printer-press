@@ -153,15 +153,15 @@ remplace l'emplacement au rechargement, sans toucher au code.
 
 | Réf. | Fichier | Sujet | Format |
 |---|---|---|---|
-| A1 | `planche-a4.jpg` | Une planche A4 imprimée, tenue en main ou posée sur un plan de travail, montrant les 10 cartes et les repères de coupe. | 1400 × 1050 |
-| A4 | `atelier-impression.jpg` | Un imprimeur, infographe ou gérant de cybercafé au travail. | 1100 × 1300 |
-| B1 | `etape-1-depot.png` | Capture de l'écran de dépôt du recto et du verso. | 900 × 675 |
-| B2 | `etape-2-reglages.png` | Capture des réglages avec l'aperçu. | 900 × 675 |
-| B3 | `etape-3-telechargement.png` | Capture des quatre fichiers livrés. | 900 × 675 |
-| C1 | `partage-reseaux.jpg` | Visuel de partage WhatsApp / Facebook. | 1200 × 630 |
+| A1 | `planche-a4.jpg` | Une planche A4 imprimée, tenue en main ou posée sur un plan de travail, montrant les 10 cartes et les repères de coupe. | 1024 × 1280 ✓ |
+| A4 | `atelier-impression.jpg` | Un imprimeur, infographe ou gérant de cybercafé au travail. | 1024 × 1280 ✓ |
+| B1 | `etape-1-depot.png` | Capture de l'écran de dépôt du recto et du verso. | 900 × 675 ✓ |
+| B2 | `etape-2-reglages.png` | Capture des réglages avec l'aperçu. | 900 × 675 ✓ |
+| B3 | `etape-3-telechargement.png` | Capture des quatre fichiers livrés. | 900 × 675 ✓ |
+| C1 | `partage-reseaux.jpg` | Visuel de partage WhatsApp / Facebook. | 1424 × 752 ✓ |
 
-Les trois captures B1–B3 se prennent directement dans le tableau de bord une
-fois le plugin branché.
+Les six visuels sont livrés (✓). Pour en remplacer un : déposer le fichier
+sous le même nom, la page le reprend au rechargement.
 
 ## Géométrie, vérifiée
 

@@ -34,8 +34,8 @@ export const IMAGE_ZONES: Record<string, ImageZoneSpec> = {
       "Une planche A4 imprimée, tenue à la main ou posée sur un plan de travail, montrant les 10 cartes et les repères de coupe.",
     intent:
       "Le visiteur doit comprendre le produit en une seconde, avant même de lire le titre.",
-    width: 1400,
-    height: 1050,
+    width: 1024,
+    height: 1280,
     priority: "essentielle",
   },
   stepUpload: {
@@ -73,18 +73,18 @@ export const IMAGE_ZONES: Record<string, ImageZoneSpec> = {
       "Photo d'un imprimeur, d'un infographe ou d'un gérant de cybercafé au travail devant son écran ou son imprimante.",
     intent:
       "Le visiteur doit se reconnaître. Une photo locale et vraie vaut mieux qu'une banque d'images.",
-    width: 1100,
-    height: 1300,
+    width: 1024,
+    height: 1280,
     priority: "essentielle",
   },
   openGraph: {
     id: "C1",
     file: "partage-reseaux.jpg",
     subject:
-      "Visuel de partage : logo PrinterPress, la planche A4, et la phrase « 300 FCFA la planche recto-verso ».",
+      "Visuel de partage : logo PrinterPress, la planche A4, et la phrase du tarif en vigueur (« … la planche recto-verso »).",
     intent: "Ce qui s'affiche quand le lien est envoyé sur WhatsApp ou Facebook.",
-    width: 1200,
-    height: 630,
+    width: 1424,
+    height: 752,
     priority: "secondaire",
   },
 };
