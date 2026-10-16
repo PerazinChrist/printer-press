@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+/*
+ * Charte PrinterPress.
+ *
+ * Les quatre couleurs viennent du logo : les trois encres (cyan, magenta,
+ * jaune) et l'anthracite du texte. Elles ne sont pas décoratives — ce sont les
+ * couleurs de l'impression, et les retrouver partout sur la plateforme est ce
+ * qui rend la marque reconnaissable sans avoir à l'expliquer.
+ */
+@theme {
+  --color-ink: #232a35;
+  --color-ink-700: #3a4150;
+  --color-ink-500: #5b6472;
+  --color-ink-300: #93a0b0;
+  --color-line: #e3e8ef;
+  --color-paper: #f6f8fb;
+
+  --color-cyan: #00a8e8;
+  --color-cyan-dark: #0b86bb;
+  --color-blue: #1673c8;
+  --color-magenta: #ec008c;
+  --color-magenta-dark: #c20074;
+  --color-yellow: #ffc800;
+  --color-green: #12a06a;
+
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --radius-card: 1rem;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Le filet d'encres : la signature visuelle du logo, reprise en séparateur. */
+.ink-rule {
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--color-yellow) 0%,
+    var(--color-yellow) 25%,
+    var(--color-magenta) 25%,
+    var(--color-magenta) 50%,
+    var(--color-cyan) 50%,
+    var(--color-cyan) 75%,
+    var(--color-ink-700) 75%
+  );
+}
+
+/* Trame d'arrière-plan : la grille de découpe, à peine visible. */
+.cut-grid {
+  background-image:
+    linear-gradient(to right, rgba(35, 42, 53, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(35, 42, 53, 0.055) 1px, transparent 1px);
+  background-size: 86px 54px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
