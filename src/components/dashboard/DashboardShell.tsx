@@ -16,13 +16,18 @@ import type { Account } from "@/lib/types";
  * « 8 planches » se comprend tout de suite.
  */
 
-const NAV = [
+type NavItem = { href: string; label: string; exact?: boolean };
+
+const NAV: NavItem[] = [
   { href: "/tableau-de-bord", label: "Vue d’ensemble", exact: true },
   { href: "/tableau-de-bord/cartes", label: "Mes cartes" },
   { href: "/tableau-de-bord/planches", label: "Mes planches" },
   { href: "/tableau-de-bord/credits", label: "Crédits" },
   { href: "/tableau-de-bord/compte", label: "Mon compte" },
 ];
+
+/** Onglet réservé aux comptes affiliés : le droit s'ouvre côté administration. */
+const AFFILIATE_NAV: NavItem = { href: "/tableau-de-bord/affiliation", label: "Mon affiliation" };
 
 export function DashboardShell({
   account,
@@ -38,6 +43,7 @@ export function DashboardShell({
   const [leaving, setLeaving] = useState(false);
 
   const sheetsLeft = Math.floor(account.balance / Math.max(1, price));
+  const nav = account.isAffiliate ? [...NAV, AFFILIATE_NAV] : NAV;
 
   async function logout() {
     setLeaving(true);
@@ -86,7 +92,7 @@ export function DashboardShell({
         </div>
 
         <nav className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4">
-          {NAV.map((item) => {
+          {nav.map((item) => {
             const active = item.exact ? pathname === item.href : pathname.startsWith(item.href);
 
             return (

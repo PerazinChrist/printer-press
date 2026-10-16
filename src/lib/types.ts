@@ -23,6 +23,9 @@ export type Account = {
   status: "actif" | "suspendu";
   hasPassword: boolean;
   googleLinked: boolean;
+  /** Seul un compte affilié voit l'espace « Mon affiliation ». */
+  isAffiliate: boolean;
+  affiliateRate: number;
   balance: number;
   balanceLabel: string;
   cardsCount: number;
@@ -167,6 +170,48 @@ export type Promo = {
   discountLabel: string;
   /** Montant offert, pour un code de type crédit. */
   credit: number;
+};
+
+export type AffiliateCode = {
+  code: string;
+  label: string;
+  summary: string;
+  active: boolean;
+  uses: number;
+  maxUses: number;
+};
+
+export type AffiliateEarning = {
+  code: string;
+  sheet: string;
+  base: number;
+  baseLabel: string;
+  rate: number;
+  amount: number;
+  amountLabel: string;
+  /** acquise | payee. */
+  status: string;
+  createdAt: string;
+  paidAt: string;
+};
+
+export type Affiliation = {
+  rate: number;
+  since: string;
+  codes: AffiliateCode[];
+  earnings: AffiliateEarning[];
+  totals: {
+    sales: number;
+    clients: number;
+    volume: number;
+    volumeLabel: string;
+    total: number;
+    totalLabel: string;
+    due: number;
+    dueLabel: string;
+    paid: number;
+    paidLabel: string;
+  };
 };
 
 export type PublicSettings = {

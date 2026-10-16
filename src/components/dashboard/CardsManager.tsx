@@ -3,8 +3,8 @@
 import { useRef, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
-import { ApiRequestError, apiSend, apiUpload } from "@/lib/api";
-import type { Card, SheetSpecs } from "@/lib/types";
+import { ApiRequestError, apiGet, apiSend, apiUpload } from "@/lib/api";
+import type { Card, Sheet, SheetSpecs } from "@/lib/types";
 
 /**
  * Gestion des cartes : dépôt, renommage, remplacement d'une face, suppression.
@@ -24,6 +24,11 @@ export function CardsManager({
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  // Les planches d'une carte ne sont chargées qu'au clic : une liste de
+  // vingt cartes n'a pas à déclencher vingt requêtes au chargement.
+  const [sheets, setSheets] = useState<Record<string, Sheet[]>>({});
+  const [openCard, setOpenCard] = useState("");
+  const [loadingSheets, setLoadingSheets] = useState("");
   const frontInput = useRef<HTMLInputElement>(null);
   const backInput = useRef<HTMLInputElement>(null);
 
@@ -99,6 +104,31 @@ export function CardsManager({
       setCards((previous) => previous.map((item) => (item.id === card.id ? updated.card : item)));
     } catch {
       setError("Le nouveau nom n’a pas pu être enregistré.");
+    }
+  }
+
+  async function toggleSheets(card: Card) {
+    if (openCard === card.id) {
+      setOpenCard("");
+      return;
+    }
+
+    setOpenCard(card.id);
+
+    if (sheets[card.id]) {
+      return;
+    }
+
+    setLoadingSheets(card.id);
+
+    try {
+      const result = await apiGet<{ sheets: Sheet[] }>(`/cards/${card.id}/planches`);
+
+      setSheets((previous) => ({ ...previous, [card.id]: result.sheets }));
+    } catch {
+      setError("Les planches de cette carte n’ont pas pu être chargées.");
+    } finally {
+      setLoadingSheets("");
     }
   }
 
@@ -216,10 +246,18 @@ export function CardsManager({
                 </div>
 
                 <div className="mt-4 flex items-center justify-between border-t border-line pt-3">
-                  <span className="text-xs text-ink-500">
-                    {card.sheetsCount} planche{card.sheetsCount > 1 ? "s" : ""} produite
-                    {card.sheetsCount > 1 ? "s" : ""}
-                  </span>
+                  {card.sheetsCount > 0 ? (
+                    <button
+                      type="button"
+                      onClick={() => toggleSheets(card)}
+                      className="text-xs font-semibold text-cyan hover:text-cyan-dark"
+                    >
+                      {openCard === card.id ? "Masquer" : "Voir"} {card.sheetsCount} planche
+                      {card.sheetsCount > 1 ? "s" : ""}
+                    </button>
+                  ) : (
+                    <span className="text-xs text-ink-500">Aucune planche produite</span>
+                  )}
 
                   <button
                     type="button"
@@ -229,6 +267,61 @@ export function CardsManager({
                     Supprimer
                   </button>
                 </div>
+
+                {openCard === card.id ? (
+                  <div className="mt-3 rounded-xl bg-paper p-3">
+                    {loadingSheets === card.id ? (
+                      <p className="text-xs text-ink-500">Chargement…</p>
+                    ) : (sheets[card.id] ?? []).length === 0 ? (
+                      <p className="text-xs text-ink-500">
+                        Aucune planche produite à partir de cette carte.
+                      </p>
+                    ) : (
+                      <ul className="space-y-3">
+                        {(sheets[card.id] ?? []).map((sheet) => (
+                          <li key={sheet.id} className="flex gap-3">
+                            {/* eslint-disable-next-line @next/next/no-img-element -- URL signée externe, non optimisable. */}
+                            <img
+                              src={sheet.previews.front}
+                              alt={`Planche ${sheet.label}`}
+                              className="aspect-[210/297] w-12 rounded border border-line bg-white object-cover"
+                            />
+
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-sm font-semibold">{sheet.label}</p>
+                              <p className="text-xs text-ink-500">
+                                {new Date(sheet.createdAt.replace(" ", "T")).toLocaleDateString(
+                                  "fr-FR",
+                                )}{" "}
+                                · {sheet.gapMm} mm ·{" "}
+                                {sheet.fitMode === "cover" ? "remplir le cadre" : "image entière"}
+                                {sheet.cutMarks ? " · repères" : ""} · {sheet.priceLabel}
+                                {sheet.promoCode !== "" ? ` · code ${sheet.promoCode}` : ""}
+                              </p>
+
+                              <div className="mt-1.5 flex flex-wrap gap-1.5">
+                                {[
+                                  ["PDF recto", sheet.files.frontPdf],
+                                  ["PDF verso", sheet.files.backPdf],
+                                  ["PNG recto", sheet.files.frontPng],
+                                  ["PNG verso", sheet.files.backPng],
+                                ].map(([label, href]) => (
+                                  <a
+                                    key={label}
+                                    href={href}
+                                    className="rounded-full border border-line bg-white px-2.5 py-1 text-[11px] font-bold text-ink-500 hover:text-ink"
+                                  >
+                                    {label}
+                                  </a>
+                                ))}
+                              </div>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                ) : null}
               </li>
             ))}
           </ul>
