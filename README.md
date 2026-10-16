@@ -103,6 +103,20 @@ qui revient peut reprendre une carte déjà déposée en basculant sur « Carte
 enregistrée ». L'écran *Mes cartes* reste là pour renommer, remplacer une face
 ou faire le ménage.
 
+## Mesure d'audience
+
+Le composant `Tracker` (posé une fois dans la mise en page racine) envoie les
+pages vues, le temps passé et la profondeur de lecture au relais
+`/api/pp/collect`. Les événements métier — inscription, connexion, carte
+déposée, aperçu, planche générée avec son montant, recharge — partent par
+`trackEvent()` depuis les composants concernés.
+
+Tout se lit dans WordPress › **Audience** : vue d'ensemble, pages, sources
+(utm), événements, temps réel, et un entonnoir « du visiteur à la planche
+payée » qui montre où les gens s'arrêtent. Rien d'identifiant n'est conservé :
+clé visiteur aléatoire, pas d'adresse IP en clair, paramètres d'URL retirés des
+chemins. « Do Not Track » est respecté par défaut.
+
 ## Codes promo
 
 Créés dans *PrinterPress › Codes promo*. Deux familles :

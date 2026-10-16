@@ -8,6 +8,7 @@ import { CardDropzone } from "@/components/dashboard/CardDropzone";
 import { PromoField } from "@/components/dashboard/PromoField";
 import { Button } from "@/components/ui/Button";
 import { ApiRequestError, apiSend } from "@/lib/api";
+import { trackEvent } from "@/lib/track";
 import type { Account, Card, Promo, Sheet, SheetSpecs } from "@/lib/types";
 
 /**
@@ -126,6 +127,7 @@ export function SheetStudio({
         );
 
         setPreview(result.preview.url);
+        trackEvent("planche", "apercu", `${gapMm} mm · ${fitMode}`);
       } catch (failure) {
         // Une composition ratée ne doit pas rester affichée comme si elle
         // avait abouti : on efface et on explique.
@@ -163,6 +165,9 @@ export function SheetStudio({
       setSheets((previous) => [result.sheet, ...previous]);
       setBalance(result.account.balance);
       setDone(result.sheet);
+      // La valeur portée à l'événement est ce qui a été réellement facturé :
+      // c'est ce qui permet de rapprocher l'audience du chiffre d'affaires.
+      trackEvent("planche", "planche_generee", result.sheet.promoCode || "plein tarif", result.sheet.price);
       // Le code vient d'être consommé : le laisser affiché promettrait une
       // remise que la planche suivante n'aura pas.
       setPromo(null);

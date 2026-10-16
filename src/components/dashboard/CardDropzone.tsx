@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { ApiRequestError, apiUpload } from "@/lib/api";
+import { trackEvent } from "@/lib/track";
 import type { Card, SheetSpecs } from "@/lib/types";
 
 /**
@@ -72,6 +73,7 @@ export function CardDropzone({
       try {
         const result = await apiUpload<{ card: Card }>("/cards", form);
 
+        trackEvent("carte", "carte_deposee", `${front!.width}x${front!.height}`);
         onCreated(result.card);
         setFront(null);
         setBack(null);

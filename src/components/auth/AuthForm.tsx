@@ -7,6 +7,7 @@ import { useCallback, useState } from "react";
 import { GoogleButton } from "@/components/auth/GoogleButton";
 import { Button } from "@/components/ui/Button";
 import { ApiRequestError, authRequest } from "@/lib/api";
+import { trackEvent } from "@/lib/track";
 import type { Account, FieldErrors } from "@/lib/types";
 
 /**
@@ -72,6 +73,8 @@ export function AuthForm({
           : values,
       );
 
+      trackEvent("compte", mode === "login" ? "connexion" : "inscription", "e-mail");
+
       router.push(destination);
       router.refresh();
     } catch (error) {
@@ -89,6 +92,7 @@ export function AuthForm({
 
       try {
         await authRequest<{ account: Account }>("google", { idToken });
+        trackEvent("compte", mode === "login" ? "connexion" : "inscription", "google");
         router.push(destination);
         router.refresh();
       } catch (error) {
@@ -97,7 +101,7 @@ export function AuthForm({
         setBusy(false);
       }
     },
-    [destination, router],
+    [destination, mode, router],
   );
 
   return (

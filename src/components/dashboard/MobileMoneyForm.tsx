@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { ApiRequestError, apiGet, apiSend } from "@/lib/api";
+import { trackEvent } from "@/lib/track";
 import type {
   PaymentAttempt,
   PaymentOperator,
@@ -115,6 +116,12 @@ export function MobileMoneyForm({
       setAttempt(result.payment);
 
       if (result.payment.status !== "attente") {
+        trackEvent(
+          "paiement",
+          result.payment.credited > 0 ? "recharge_encaissee" : "recharge_echouee",
+          result.payment.operator,
+          result.payment.credited,
+        );
         onCredited(result.balanceLabel, result.balance);
       } else if (Date.now() - startedAt.current > GIVE_UP_MS) {
         setError(
@@ -143,6 +150,7 @@ export function MobileMoneyForm({
       setAttempt(result.payment);
       setProviderLink(result.providerLink);
       setOtp("");
+      trackEvent("paiement", "recharge_lancee", result.payment.operator, amount);
     } catch (failure) {
       if (failure instanceof ApiRequestError) {
         setError(failure.message);
